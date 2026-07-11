@@ -1,0 +1,87 @@
+# Original or generated ROM images
+*.nes
+*.fds
+*.unf
+*.unif
+
+# ROM backups and temporary copies
+*.bin
+*.bak
+*.backup
+*.orig
+*.patched
+*.rom
+*.ps1
+
+# Raw binary output
+src/
+bin/
+build/
+out/
+dist/
+release-temp/
+*.bin
+*.o
+*.obj
+*.map
+*.dbg
+*.lbl
+
+# Original Zelda disassembly working tree
+vendor/
+zelda1-disassembly/
+upstream/
+
+# Locally supplied copyrighted assets
+ext/
+assets/original/
+assets/extracted/
+roms/
+ROMs/
+
+# Emulator files
+*.fcs
+*.fc0
+*.fc1
+*.fc2
+*.fc3
+*.fc4
+*.fc5
+*.fc6
+*.fc7
+*.fc8
+*.fc9
+*.fm2
+*.tas
+*.wch
+*.cdl
+
+# FCEUX configuration and logs
+fceux.cfg
+fceux.log
+*.log
+
+# Patch-generation temporary files
+patch-work/
+base-rom/
+patched-rom/
+
+# cc65 local toolchain
+tools/cc65/
+cc65/
+*.exe
+*.dll
+
+# Editors and operating systems
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# PowerShell and shell temporary files
+*.tmp
+*.temp

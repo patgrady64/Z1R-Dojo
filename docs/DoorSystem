@@ -1,0 +1,134 @@
+# Dungeon Door System Research
+
+## Confirmed Attribute Storage
+
+Dungeon door types are packed into two room-attribute bytes.
+
+### Attribute A
+
+`LevelBlockAttrsA` contains:
+
+* bits `0–1`: palette information
+* bits `2–4`: south door
+* bits `5–7`: north door
+
+### Attribute B
+
+`LevelBlockAttrsB` contains:
+
+* bits `0–1`: palette information
+* bits `2–4`: east door
+* bits `5–7`: west door
+
+The low two palette bits must be preserved when replacing doorway information.
+
+## Door-Type Values
+
+| Value | Current name         |
+| ----: | -------------------- |
+| `$00` | Open                 |
+| `$01` | Wall                 |
+| `$02` | False wall           |
+| `$03` | Alternate false wall |
+| `$04` | Bombable             |
+| `$05` | Key                  |
+| `$06` | Alternate key        |
+| `$07` | Shutter              |
+
+Some names describe the apparent purpose of the value but still require behavioral verification.
+
+## Confirmed Configuration Test
+
+The following arrangement rendered correctly:
+
+| Side  | Type |
+| ----- | ---- |
+| North | Open |
+| East  | Wall |
+| South | Open |
+| West  | Wall |
+
+Changing only the north side to a key door also rendered correctly.
+
+This confirms:
+
+1. The two attribute bytes were identified correctly.
+2. The north/south and east/west bit positions are correct.
+3. Door types can be replaced independently.
+4. Palette information can be preserved.
+5. Door configuration is independent of the original visible room geometry.
+
+## Remaining Research
+
+The following systems may use additional state:
+
+* opened key-door flags
+* bombed-wall flags
+* shutter commands
+* room-clear triggers
+* persistent door state
+* door-closing animation
+* entry through doors that begin closed
+* reopening configured doors during drill reset
+
+## Bombable Walls and Bomb Holes
+
+### Closed Bombable Walls
+
+A configured bombable wall appears visually identical to an ordinary wall in Zelda 1.
+
+Bombing the wall:
+
+1. consumes one bomb,
+2. opens the passage,
+3. updates `CurOpenedDoors`,
+4. and preserves the opened passage when leaving and returning.
+
+A north bombable wall changed:
+
+```text
+CurOpenedDoors: $00 → $08
+```
+
+### Initial Opened State
+
+The door-type attribute describes what kind of doorway exists.
+
+`CurOpenedDoors` describes whether that doorway is currently open.
+
+These properties can be configured separately.
+
+For example:
+
+```text
+Door type: Bombable
+Starts open: No
+```
+
+creates a normal wall that must be bombed.
+
+```text
+Door type: Bombable
+Starts open: Yes
+```
+
+creates an already-open bomb passage.
+
+### Opened-Door Bits
+
+| Side  |   Bit |
+| ----- | ----: |
+| East  | `$01` |
+| West  | `$02` |
+| South | `$04` |
+| North | `$08` |
+
+All four sides set together produce `$0F`.
+
+### Four-Side Confirmation
+
+All four sides were configured as bombable and initialized as open.
+
+All four bomb holes rendered and behaved as open passages immediately after room loading.
+
+This confirms that starting-open state can be applied independently across the complete doorway bit field.

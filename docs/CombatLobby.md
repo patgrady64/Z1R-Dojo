@@ -1,0 +1,54 @@
+# Combat Lobby Research
+
+## Purpose
+
+The Z1 Dojo combat lobby provides a safe preparation area between setup selection and active combat.
+
+The player is not placed directly into a room containing active enemies.
+
+## Initial Test Layout
+
+| Purpose     | Level |  Room |
+| ----------- | ----: | ----: |
+| Lobby       | `$01` | `$73` |
+| Combat room | `$01` | `$63` |
+
+Room `$63` is directly north of room `$73`.
+
+## Confirmed Flow
+
+1. Z1 Dojo loads room `$73`.
+2. Link enters the lobby from the south.
+3. No combat enemies are active in the lobby.
+4. The player chooses when to walk through the north doorway.
+5. Zelda performs its normal room transition.
+6. Room `$63` becomes the active room.
+7. Room `$63` enemies spawn normally.
+
+## Lobby Door Layout
+
+| Side  | Type |
+| ----- | ---- |
+| North | Open |
+| East  | Wall |
+| South | Open |
+| West  | Wall |
+
+## Design Result
+
+The lobby successfully separates preparation from combat.
+
+This allows the player to:
+
+* confirm equipment,
+* inspect health and consumables,
+* position their hands,
+* and deliberately begin the attempt.
+
+## Current Limitation
+
+The first lobby implementation uses normal dungeon adjacency.
+
+The lobby north exit currently reaches room `$63` because that is the room naturally located north of `$73`.
+
+A later system must intercept the lobby transition and replace the normal destination with the player-selected combat arena.
