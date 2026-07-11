@@ -5,6 +5,54 @@ All notable changes to **Z1 Dojo** will be documented in this file.
 This project follows a milestone-based development process rather than feature dumps. Each version represents meaningful progress toward creating a complete training environment for *The Legend of Zelda* (NES) and Zelda 1 Randomizer players.
 
 --
+## [0.0.16] - 20260711153027 - Named Arena Catalog
+
+Added
+Added a permanent named combat-arena geometry catalog.
+Cataloged all verified Zelda 1 underworld geometries from $00 through $29.
+Added named geometry constants for standard rooms, boss rooms, moat rooms, stair rooms, special rooms, and hazard rooms.
+Added direct lookup of verified raw geometry IDs through DojoGeometryIds.
+Added DOJO_GEOMETRY_COUNT with 42 valid catalog entries.
+Changed
+Replaced the temporary three-entry source-room catalog with a complete direct geometry-ID catalog.
+Removed the temporary geometry scanner and its $06FF RAM probe.
+Removed scanner initialization and automatic geometry advancement.
+Geometry selection now remains stable between repeated lobby-to-combat-room visits.
+The combat room continues to use physical room $63, regardless of the selected geometry.
+Verified Geometry Range
+
+Valid underworld geometry data was confirmed from:
+
+$00 through $29
+
+Values $2A and above produced corrupted graphics or crashes and are not treated as valid underworld geometry.
+
+Special Geometry Notes
+$20 is Turnstyle geometry.
+Turnstyle appears to require appropriate doorway or room-behavior configuration and is not yet considered a normal menu-ready arena.
+$23 is the two-fireball-shooter room, distinct from the block-only two-fireball geometry at $0A.
+Boss and special rooms remain cataloged, but may later require metadata or restrictions before being exposed in the arena-selection menu.
+Confirmed Behavior
+
+The permanent catalog was tested with multiple named geometries, including:
+
+4 Short
+Maze
+Single 6
+Level 1 entrance geometry
+
+For each tested geometry:
+
+the physical room remained $63,
+the map moved only one room north and south,
+the combat room retained its independent south-only doorway layout,
+returning to the lobby worked,
+lobby colors remained correct,
+and the selected geometry remained stable between visits.
+Milestone
+
+Version 0.0.16 establishes the permanent named arena catalog that future setup menus will use.
+
 ## [0.0.15] - 20260711150729 - Fixed Combat Slot with Selectable Geometry
 
 Added
