@@ -5,6 +5,138 @@ All notable changes to **Z1 Dojo** will be documented in this file.
 This project follows a milestone-based development process rather than feature dumps. Each version represents meaningful progress toward creating a complete training environment for *The Legend of Zelda* (NES) and Zelda 1 Randomizer players.
 
 --
+## [0.0.14] - 20260711135608 - Separate Lobby and Combat-Room Configuration
+
+Added
+Added separate doorway configurations for the safe lobby and the selected combat room.
+Added a reusable door-attribute packing routine that accepts four temporary door-type values.
+Added dedicated routines for:
+applying the fixed lobby door layout
+applying the selected combat-room door layout
+Added combat-room configuration during the lobby-to-arena scrolling transition.
+Added normal Zelda room-layout handling for all transitions that do not originate from the Dojo lobby.
+Changed
+Replaced the single global door configuration with independent lobby and combat-room settings.
+Updated initial dungeon loading so only the safe lobby receives the lobby doorway layout.
+Updated upward room scrolling so the redirected destination receives the selected combat-room doorway layout before Zelda draws it.
+Preserved normal room-transition behavior outside the Dojo lobby.
+Converted the original local @CheckDark label into a normal label so it remains accessible after the new global transition labels.
+Preserved normal shutter, bombable-wall, and walk-through-wall behavior inside the redirected combat arena.
+Lobby Configuration
+
+The lobby uses a fixed safe layout:
+
+Side	Type
+North	Open
+East	Wall
+South	Wall
+West	Wall
+
+This keeps the player inside the lobby while leaving the north entrance available for beginning a combat attempt.
+
+Combat-Room Test Configuration
+
+The redirected combat room was configured with four different doorway behaviors:
+
+Side	Type
+North	Shutter
+East	Bombable wall
+South	Open
+West	Walk-through wall
+
+This deliberately mixed layout was used to confirm that the destination room received the combat configuration rather than its original ROM-defined door layout.
+
+Confirmed Behavior
+
+All configured combat-room doorway behaviors were successfully tested.
+
+North Shutter
+Began closed.
+Opened after every enemy in the combat room was defeated.
+Used Zelda’s normal shutter-opening behavior.
+East Bombable Wall
+Appeared as an ordinary wall, as expected in Zelda 1.
+Opened when bombed.
+Consumed one bomb.
+Used Zelda’s normal bomb-hole behavior.
+South Open Doorway
+Rendered as an open passage.
+Allowed Link to enter the redirected combat room normally.
+West Walk-Through Wall
+Appeared as an ordinary wall.
+Allowed Link to pass after pushing against it for approximately two seconds.
+Used Zelda’s normal Second Quest walk-through-wall behavior.
+Door-Configuration Architecture
+
+The lobby and combat room now provide their door types to one shared packing routine.
+
+Conceptually:
+
+Lobby door values
+        ↓
+ApplyDojoLobbyDoorConfig
+        ↓
+ApplyDojoDoorConfigFromTemps
+
+and:
+
+Combat door values
+        ↓
+ApplyDojoCombatDoorConfig
+        ↓
+ApplyDojoDoorConfigFromTemps
+
+The shared routine packs:
+
+south and north into LevelBlockAttrsA
+east and west into LevelBlockAttrsB
+
+while preserving each room’s original palette bits.
+
+Transition-Time Application
+
+During an upward room transition, Zelda temporarily installs NextRoomId as RoomId so it can lay out the destination.
+
+Z1 Dojo now checks whether:
+
+the source room is the Dojo lobby,
+the current level is the Dojo lobby level,
+and the transition is the northward lobby exit.
+
+When those conditions match:
+
+Temporarily install selected combat RoomId
+        ↓
+Apply combat-room doorway configuration
+        ↓
+Lay out the selected combat room
+        ↓
+Restore the lobby RoomId until scrolling finishes
+
+All other upward transitions use Zelda’s normal destination-layout path.
+
+Development Issue Resolved
+
+The combat-room configuration routine initially existed but was never called from the upward-scroll path.
+
+A temporary RAM marker at $06FF confirmed whether the routine executed. After the call was inserted correctly, the selected doorway layout appeared and all behaviors worked.
+
+The diagnostic marker was removed after testing.
+
+Milestone
+
+Version 0.0.14 establishes independent lobby and combat-room configuration.
+
+Z1 Dojo can now:
+
+maintain a fixed safe lobby,
+redirect the lobby to a selected combat arena,
+apply a separate doorway layout to that arena,
+preserve the selected door behaviors,
+and leave unrelated Zelda room transitions unchanged.
+
+This is the first version where the lobby and combat arena operate as two distinct parts of one configurable training flow.
+
 ## [0.0.13] - 20260711131149 - Lobby Arena Redirection
 
 Added

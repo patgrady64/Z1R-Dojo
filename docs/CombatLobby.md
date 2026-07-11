@@ -98,3 +98,49 @@ Room `$53` loaded successfully using Zelda’s normal scrolling process.
 The lobby’s south doorway is configured as a wall.
 
 Direct initial loading can still place Link through that side, but the player cannot use it as an exit after gaining control.
+
+## Separate Lobby and Combat-Room Configuration
+
+Z1 Dojo v0.0.14 separates the fixed lobby layout from the selected combat-room layout.
+
+### Lobby
+
+The lobby receives its doorway configuration during initial dungeon loading.
+
+### Combat Room
+
+The selected combat room receives its doorway configuration while Zelda lays out the redirected destination during the upward room scroll.
+
+### Confirmed Test Layout
+
+| Side  | Lobby | Combat room       |
+| ----- | ----- | ----------------- |
+| North | Open  | Shutter           |
+| East  | Wall  | Bombable          |
+| South | Wall  | Open              |
+| West  | Wall  | Walk-through wall |
+
+The combat room successfully displayed and executed all four configured behaviors.
+
+### Shared Door Packer
+
+Both configurations use the same reusable packing routine.
+
+Temporary bytes contain:
+
+| Temporary | Door  |
+| --------: | ----- |
+|     `$01` | North |
+|     `$02` | East  |
+|     `$03` | South |
+|     `$04` | West  |
+
+The routine writes the values into the selected room’s door-attribute fields while preserving its palette information.
+
+### Upward-Scroll Integration
+
+For upward scrolling, Zelda temporarily assigns `NextRoomId` to `RoomId` before calling `LayOutRoom`.
+
+Z1 Dojo uses this moment to apply the selected combat-room attributes.
+
+The source lobby room is restored after the destination is drawn, and Zelda completes its normal scrolling transition.
