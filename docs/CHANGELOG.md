@@ -5,6 +5,82 @@ All notable changes to **Z1 Dojo** will be documented in this file.
 This project follows a milestone-based development process rather than feature dumps. Each version represents meaningful progress toward creating a complete training environment for *The Legend of Zelda* (NES) and Zelda 1 Randomizer players.
 
 --
+## [0.0.15] - 20260711150729 - Fixed Combat Slot with Selectable Geometry
+
+Added
+Added a fixed physical combat-room slot at Level 1 room $63.
+Added independent combat-arena geometry selection.
+Added geometry selection IDs for three initial test layouts:
+Level 1 entrance room $73
+Level 1 north room $63
+Level 1 two-north room $53
+Added DojoGeometrySourceRooms, which maps geometry selection IDs to source room IDs.
+Added ApplyDojoCombatGeometry, which copies a selected room’s unique underworld layout ID into the fixed combat slot.
+Changed
+Combat arena selection no longer changes the physical destination room.
+The lobby now connects normally to the adjacent combat slot:
+Lobby $73 north to combat slot $63
+Combat slot $63 south to lobby $73
+Removed the need to jump two dungeon rows when loading a selected arena.
+Preserved the combat slot’s map position, door configuration, enemies, and upper room-attribute bits while replacing only its interior geometry.
+Combat geometry is now applied before the independent combat-door configuration and before the destination room is drawn.
+Geometry Attribute Handling
+
+The lower six bits of LevelBlockAttrsD identify the unique underworld room layout.
+
+ApplyDojoCombatGeometry:
+
+Reads the selected source room from DojoGeometrySourceRooms.
+Extracts the source room’s lower-six-bit geometry ID.
+Preserves the combat slot’s upper two attribute bits.
+Writes the combined value into the fixed combat slot.
+
+Conceptually:
+
+Selected geometry ID
+        ↓
+Source room lookup table
+        ↓
+Source room layout bits 0–5
+        +
+Combat slot bits 6–7
+        ↓
+Combat slot $63
+Confirmed Geometry Selections
+
+All three initial geometry selections were successfully tested.
+
+Entrance Geometry
+DOJO_STARTING_GEOMETRY := DOJO_GEOMETRY_L1_ENTRANCE
+Physical room remained $63.
+Interior geometry was borrowed from room $73.
+Map position and lobby return remained correct.
+Original Combat-Slot Geometry
+DOJO_STARTING_GEOMETRY := DOJO_GEOMETRY_L1_NORTH
+Physical room remained $63.
+Room $63 used its original geometry.
+Independent combat doors remained active.
+Two-North Geometry
+DOJO_STARTING_GEOMETRY := DOJO_GEOMETRY_L1_TWO_NORTH
+Physical room remained $63.
+Interior geometry was borrowed from room $53.
+The map still moved only one room north and south.
+Confirmed Separation
+
+Changing the selected geometry did not change:
+
+the physical combat room ID,
+the dungeon map location,
+the safe doorway configuration,
+the combat slot’s original enemy assignment,
+the lobby’s appearance,
+or the lobby-to-combat return loop.
+Milestone
+
+Version 0.0.15 establishes the fixed-combat-slot architecture.
+
+Z1 Dojo can now place different arena interiors into one safe, adjacent combat location without moving Link to unrelated dungeon coordinates.
+
 ## [0.0.14] - 20260711135608 - Separate Lobby and Combat-Room Configuration
 
 Added
