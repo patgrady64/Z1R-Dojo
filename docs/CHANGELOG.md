@@ -5,7 +5,87 @@ All notable changes to **Z1 Dojo** will be documented in this file.
 This project follows a milestone-based development process rather than feature dumps. Each version represents meaningful progress toward creating a complete training environment for *The Legend of Zelda* (NES) and Zelda 1 Randomizer players.
 
 --
-## [0.0.17] - 20260711171901 -  Arena Metadata and Safety Fallback
+## [0.0.18] - 20260711173155 - Curated Playable Arena List
+
+Added
+Added a curated player-facing combat-arena list.
+Added separate player-facing arena selection indexes.
+Added DojoPlayableArenaGeometries, which maps approved arena choices to entries in the complete internal geometry catalog.
+Added a fallback player-facing arena for invalid curated selections.
+Added the following initial playable arenas:
+Blank
+4 Short
+4 Tall
+Maze
+Grid
+Chevy
+NSU
+Single 6
+Changed
+Player-facing arena selection no longer directly references raw Zelda geometry IDs.
+The complete technical geometry catalog remains available internally for research and documentation.
+Noncombat and special-purpose geometries are excluded from the normal playable-arena list.
+Plain geometry is presented to the player as the canonical Blank arena.
+Black geometry is not exposed because it is functionally redundant with Blank for normal combat practice.
+ApplyDojoCombatGeometry now resolves selections through the curated playable-arena table.
+Invalid player-facing selections now fall back safely to 4 Short.
+The internal metadata safety check remains active after the curated lookup.
+Excluded Geometries
+
+The curated list intentionally excludes geometries that are unsuitable for general combat practice, including:
+
+Turnstyle
+Level 1 entrance/lobby
+Zelda’s room
+Ganon’s room
+Triforce room
+fireball-shooter rooms
+other boss, traversal, or special-purpose layouts
+
+These geometries remain documented in the complete internal catalog and may be used by specialized training modes later.
+
+Selection Architecture
+
+The arena-selection path is now:
+
+Player-facing arena index
+        ↓
+DojoPlayableArenaGeometries
+        ↓
+Internal geometry catalog index
+        ↓
+DojoGeometryIds
+        ↓
+Raw Zelda underworld geometry
+        ↓
+Fixed combat slot $63
+
+This keeps the player-facing list independent from Zelda’s raw room-layout numbering.
+
+Confirmed Behavior
+
+The following selections were tested successfully:
+
+4 Short
+Maze
+Blank
+
+For each selection:
+
+the physical combat room remained $63,
+the selected geometry appeared correctly,
+only the south combat-room doorway remained open,
+returning to lobby $73 worked,
+lobby colors remained correct,
+and repeated visits retained the same selection.
+
+Invalid curated selection $08 correctly fell back to 4 Short.
+
+Milestone
+
+Version 0.0.18 establishes the initial player-safe arena-selection layer that the future Z1 Dojo setup menu will control.
+
+## [0.0.17] - 20260711171901 - Arena Metadata and Safety Fallback
 
 Added
 Added one metadata byte for every named arena geometry.
