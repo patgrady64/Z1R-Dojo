@@ -5,6 +5,70 @@ All notable changes to **Z1 Dojo** will be documented in this file.
 This project follows a milestone-based development process rather than feature dumps. Each version represents meaningful progress toward creating a complete training environment for *The Legend of Zelda* (NES) and Zelda 1 Randomizer players.
 
 --
+## [0.0.17] - 20260711171901 -  Arena Metadata and Safety Fallback
+
+Added
+Added one metadata byte for every named arena geometry.
+Added metadata flags for:
+currently selectable arenas
+boss-shaped arenas
+built-in fireball shooters
+special-purpose rooms
+geometries requiring special doorway behavior
+Added a configurable fallback arena through DOJO_FALLBACK_GEOMETRY.
+Added catalog-range validation before loading a selected arena.
+Added metadata-based safety validation before applying arena geometry.
+Changed
+ApplyDojoCombatGeometry now validates the selected catalog index before reading the geometry table.
+Out-of-range geometry selections now fall back safely to 4 Short.
+Arena entries without the selectable flag now fall back safely to 4 Short.
+Turnstyle remains cataloged but is temporarily blocked from normal selection because its doorway requirements have not yet been implemented.
+Metadata Flags
+
+Each arena receives a metadata byte using the following flags:
+
+Bit	Purpose
+0	Selectable with the current combat-room system
+1	Boss-shaped arena
+2	Contains built-in fireball shooters
+3	Special-purpose room
+4	Requires special doorway or room behavior
+
+Flags can be combined so one arena can belong to multiple categories.
+
+Safety Fallback
+
+The current fallback is:
+
+DOJO_FALLBACK_GEOMETRY := DOJO_GEOMETRY_4_SHORT
+
+The loading path is now:
+
+Configured selection
+        ↓
+Check catalog range
+        ↓
+Read arena metadata
+        ↓
+Check SELECTABLE flag
+        ↓
+Load selected arena or fall back to 4 Short
+Confirmed Behavior
+
+The following tests were completed successfully:
+
+4 Short loaded normally.
+Maze loaded normally.
+Turnstyle fell back to 4 Short.
+Invalid catalog index $2A fell back to 4 Short.
+The lobby-to-combat-room loop remained functional.
+The combat room remained physical room $63.
+Lobby colors remained correct.
+No invalid room graphics or crashes occurred during fallback testing.
+Milestone
+
+Version 0.0.17 introduces the safety and metadata layer required before arena choices are exposed through a player-facing menu.
+
 ## [0.0.16] - 20260711153027 - Named Arena Catalog
 
 Added
