@@ -7,7 +7,120 @@ This project follows a milestone-based development process rather than feature d
 --
 ## [0.0.13] - 20260711131149 - Lobby Arena Redirection
 
+Added
+Added lobby-to-combat-arena room redirection.
+Added a third confirmed development arena:
+Level 1 room $53
+Added named constants for the Dojo lobby level and room.
+Added named constants for the currently selected test combat arena.
+Added Z1 Dojo branding to the dungeon status bar.
+Changed
+Changed the lobby’s south side from an open exit to a solid wall.
+Prevented players from leaving the dungeon through the lobby’s southern boundary.
+Intercepted the lobby’s northward room transition.
+Replaced Zelda’s normally adjacent destination with the selected combat-room destination.
+Replaced the dungeon status-bar text LEVEL-1 with Z1-DOJO.
+Removed the original behavior that replaced the final status-bar character with the current dungeon number.
+Lobby Door Configuration
 
+The lobby now uses:
+
+Side	Door type
+North	Open
+East	Wall
+South	Wall
+West	Wall
+
+Link can still initially enter the lobby through the south side because direct room initialization bypasses normal doorway traversal.
+
+After Link gains control, the south side behaves as a solid wall and prevents the player from attempting to leave the dungeon.
+
+Normal Zelda Destination
+
+The lobby is Level 1 room $73.
+
+Under Zelda’s normal dungeon-grid calculation, moving north produces:
+
+$73 - $10 = $63
+
+Before this milestone, the lobby’s north doorway always led to room $63.
+
+Redirected Destination
+
+The test combat arena was changed to Level 1 room $53.
+
+When Link leaves the lobby through the north doorway, Z1 Dojo now checks:
+
+Is the current level the Dojo lobby level?
+Is the current room the Dojo lobby room?
+Is Link moving north?
+
+When all conditions are true, Z1 Dojo replaces NextRoomId with the selected combat-room ID.
+
+The confirmed flow is:
+
+Lobby room $73
+      ↓ north exit
+Redirected combat room $53
+
+Reaching $53 instead of the naturally adjacent $63 confirms that the transition is genuinely redirected.
+
+Transition Variables
+Address	Variable	Purpose
+$00E7	Transition direction	Direction used to calculate the next room
+$00EB	RoomId	Current room
+$00EC	NextRoomId	Destination room
+
+For a northward lobby exit:
+
+Transition direction = $08
+RoomId before scroll = $73
+NextRoomId during scroll = $53
+RoomId after scroll = $53
+Status-Bar Branding
+
+The original dungeon heading:
+
+LEVEL-1
+
+was replaced with:
+
+Z1-DOJO
+
+Both strings contain seven characters, so the new heading fits the original transfer-buffer length.
+
+The original code replaced the final character with the current dungeon number. That write was removed so the final O remains intact.
+
+Current Limitations
+
+The redirect currently changes only the destination room.
+
+The selected combat arena still uses its original ROM-defined:
+
+door layout,
+room geometry,
+enemies,
+room triggers,
+and other attributes.
+
+The custom door configuration is currently applied during initial room loading and therefore configures the lobby rather than the redirected combat room.
+
+Future work will distinguish lobby configuration from combat-arena configuration and apply the selected setup after the lobby transition.
+
+Milestone
+
+Version 0.0.13 establishes arbitrary lobby-to-arena redirection.
+
+Z1 Dojo can now:
+
+begin in a safe lobby,
+prevent the player from exiting south,
+detect the lobby’s north exit,
+redirect that exit to a selected nonadjacent room,
+preserve normal Zelda room scrolling,
+and display Z1 Dojo branding in the dungeon interface.
+
+This is the first step toward allowing the permanent lobby to lead to any player-selected combat arena.
 
 ## [0.0.12] - 20260711055124 - Safe Combat Lobby Foundation
 

@@ -52,3 +52,49 @@ The first lobby implementation uses normal dungeon adjacency.
 The lobby north exit currently reaches room `$63` because that is the room naturally located north of `$73`.
 
 A later system must intercept the lobby transition and replace the normal destination with the player-selected combat arena.
+
+## Arbitrary Arena Redirection
+
+Z1 Dojo v0.0.13 intercepts the lobby’s northward room transition.
+
+### Normal Room Calculation
+
+Zelda calculates the next dungeon room by adding a direction-based offset to the current room.
+
+For a northward transition:
+
+```text
+RoomId + $F0
+```
+
+Because the arithmetic uses an eight-bit room ID, this is equivalent to subtracting `$10`.
+
+The normal destination from lobby room `$73` is therefore `$63`.
+
+### Z1 Dojo Override
+
+After Zelda calculates `NextRoomId`, Z1 Dojo checks:
+
+* current level,
+* current room,
+* transition direction.
+
+When the current location is the Dojo lobby and the direction is north, `NextRoomId` is replaced with the selected combat-room ID.
+
+### Confirmed Test
+
+| Property               |         Value |
+| ---------------------- | ------------: |
+| Lobby level            |         `$01` |
+| Lobby room             |         `$73` |
+| Direction              | North / `$08` |
+| Normal destination     |         `$63` |
+| Redirected destination |         `$53` |
+
+Room `$53` loaded successfully using Zelda’s normal scrolling process.
+
+### Lobby Containment
+
+The lobby’s south doorway is configured as a wall.
+
+Direct initial loading can still place Link through that side, but the player cannot use it as an exit after gaining control.
