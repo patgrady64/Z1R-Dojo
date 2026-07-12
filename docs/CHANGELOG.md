@@ -5,6 +5,56 @@ All notable changes to **Z1 Dojo** will be documented in this file.
 This project follows a milestone-based development process rather than feature dumps. Each version represents meaningful progress toward creating a complete training environment for *The Legend of Zelda* (NES) and Zelda 1 Randomizer players.
 
 --
+## [0.0.19] - 20260711182054 - Runtime Arena Selection
+
+Added
+Added runtime-selectable combat arena geometry.
+Added a curated list of eight player-facing arenas:
+Blank
+4 Short
+4 Tall
+Maze
+Grid
+Chevy
+NSU
+Single 6
+Added validation for the runtime arena selection.
+Added automatic fallback to 4 Short when the selected arena value is invalid.
+Added temporary lobby controls for testing arena selection:
+Hold Select and press Down to select the next arena.
+Hold Select and press Up to select the previous arena.
+Press Select by itself to cycle through available B-button items.
+Added support for the starting boomerang loadout so B-item cycling can be tested.
+Added a two-line lobby notification banner when the arena changes.
+Added dynamic previous-arena and new-arena names to the banner.
+Added an approximately 1.5-second banner timer.
+Added automatic restoration of the original lobby graphics after the banner disappears.
+Added immediate banner cleanup when leaving the lobby.
+Changed
+Arena geometry is now selected at runtime instead of being limited to a compile-time constant.
+The selected geometry continues to use the fixed combat-room slot at room $63.
+Arena geometry remains independent from combat-room door configuration.
+Arena selection wraps from the final arena back to Blank and from Blank back to the final arena.
+Arena changes no longer play a confirmation sound.
+Temporary Select-based controls consume directional input so Link does not move while changing arenas.
+Added a direction-release lock intended to reduce repeated arena changes from a single directional press.
+Technical
+Added DOJO_SELECTED_PLAYABLE_ARENA at $0516.
+Added DOJO_SELECT_MODIFIER_STATE at $0517.
+Added DOJO_PREVIOUS_PLAYABLE_ARENA at $0518.
+Added DOJO_ARENA_BANNER_TIMER at $0520.
+Added a playable-arena-to-geometry mapping table.
+Added fixed-width eight-tile arena-name records for notification rendering.
+Added dynamic PPU transfer-buffer generation for the two-line lobby banner.
+Added row-by-row restoration using the game’s existing room-row rendering system.
+Preserved the existing geometry safety metadata and fallback behavior.
+Kept Chevy selectable while retaining its future ladder-requirement metadata.
+Kept Turnstyle excluded from the player-facing arena list because it depends on special push-block room behavior.
+Notes
+The Select-based arena controls and notification banner are temporary development tools.
+Occasional imperfect arena stepping may still occur with rapid controller input. This is acceptable for the temporary testing interface and will be replaced by the permanent Z1 Dojo setup menu.
+Enemy configuration and spawning are not included in this release.
+
 ## [0.0.18] - 20260711173155 - Curated Playable Arena List
 
 Added
