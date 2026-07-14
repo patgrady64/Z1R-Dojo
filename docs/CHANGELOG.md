@@ -5,6 +5,66 @@ All notable changes to **Z1 Dojo** will be documented in this file.
 This project follows a milestone-based development process rather than feature dumps. Each version represents meaningful progress toward creating a complete training environment for *The Legend of Zelda* (NES) and Zelda 1 Randomizer players.
 
 --
+## [0.0.20] - 20260712035228 - First Combat Drill
+
+Added
+Added configurable combat encounters for the fixed Z1 Dojo combat room at $63.
+Added support for up to eight regular enemy slots.
+Added mixed enemy groups instead of requiring every enemy to use the same type.
+Added DOJO_ENEMY_NONE entries for unused configuration slots.
+Added automatic enemy counting.
+Added automatic slot compaction so NONE entries may appear anywhere in the configuration table.
+Added support for empty combat drills with zero active enemies.
+Added automatic encounter reset whenever the player leaves and re-enters the combat room.
+Added enemy constants for:
+Stalfos
+Blue Keese
+Gibdo
+Added the first working mixed combat drill using two Stalfos and two Blue Keese.
+Changed
+Replaced the original repeated-enemy override with an eight-slot enemy configuration table.
+Z1 Dojo now populates Zelda’s individual object-type slots directly.
+Enemy count is derived from the configured non-empty slots instead of being maintained manually.
+Active enemies are compacted into consecutive object slots before the original spawn-position logic runs.
+Enemy placement continues to use Zelda’s normal game-controlled spawn system.
+The combat room’s enemy configuration remains independent from:
+Arena geometry
+Door configuration
+Player loadout
+Moved temporary Z1 Dojo runtime state from game-owned RAM at $0516–$0520 to stable RAM at $06F0–$06F3.
+Fixed
+Fixed enemies appearing inside the HUD because the calculated enemy count was tested using stale processor flags after STY.
+Fixed the selected arena resetting to Blank when entering the combat room.
+Fixed arena state being overwritten during room transitions.
+Fixed Select+Up and Select+Down also cycling the B-button item.
+Fixed encounters failing or behaving incorrectly after leaving and re-entering the combat room.
+Fixed empty configuration slots producing broken or invisible objects.
+Technical
+Added DojoCombatEnemySlots, an eight-byte encounter configuration table.
+Added automatic scanning of all eight configuration entries.
+Added compaction of active enemies into ObjType+1 through ObjType+8.
+Added automatic calculation of RoomObjCount.
+Preserved Zelda’s original object-template and safe-spawn-position logic.
+Added carry-based signaling from ApplyDojoCombatEnemyConfig:
+Carry clear uses the original room configuration.
+Carry set uses the Z1 Dojo custom encounter.
+Assigned stable runtime state addresses:
+$06F0 — selected arena
+$06F1 — Select-control state
+$06F2 — previous arena
+$06F3 — banner timer
+Current Test Encounter
+Slot 1: Stalfos
+Slot 2: None
+Slot 3: Blue Keese
+Slot 4: None
+Slot 5: Stalfos
+Slot 6: Blue Keese
+Slot 7: None
+Slot 8: None
+
+The resulting encounter contains two Stalfos and two Blue Keese.
+
 ## [0.0.19] - 20260711182054 - Runtime Arena Selection
 
 Added
