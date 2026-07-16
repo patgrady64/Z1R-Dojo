@@ -5,6 +5,111 @@ All notable changes to **Z1 Dojo** will be documented in this file.
 This project follows a milestone-based development process rather than feature dumps. Each version represents meaningful progress toward creating a complete training environment for *The Legend of Zelda* (NES) and Zelda 1 Randomizer players.
 
 --
+## [0.0.21] - 20260714085724 - Dynamic Enemy Graphics Foundation
+
+### Added
+
+* Added randomized enemy spawn positions for the Z1 Dojo combat room.
+* Added a full-arena pool containing 84 interior spawn candidates.
+* Added support for placing all eight configured enemies on every room entry.
+* Added randomized starting positions and randomized traversal through the spawn pool.
+* Added unique-position validation so two enemies cannot begin on the same cell.
+* Added arena-aware collision validation using the selected room’s actual collision data.
+* Added a strict initial placement pass using Zelda’s normal terrain and Link-distance checks.
+* Added a fallback placement pass that retains terrain safety while using a smaller safety zone around Link.
+* Added a spawn-failure state for detecting configurations that cannot be placed safely.
+* Added stable runtime variables for the full-arena placement system:
+
+  * `$06F4` — current candidate index
+  * `$06F5` — traversal step
+  * `$06F6` — attempts remaining
+  * `$06F7` — current enemy object slot
+  * `$06F8` — candidate X coordinate
+  * `$06F9` — candidate Y coordinate
+  * `$06FA` — spawn-failure state
+
+### Changed
+
+* Replaced Zelda’s original nine-position Dojo placement system with an 84-cell interior spawn pool.
+* Enemy positions are now regenerated whenever the player enters the combat room.
+* The same enemy configuration now produces different combat arrangements between attempts.
+* Spawn candidates are validated against the currently selected arena instead of relying only on a small fixed list.
+* Enemy placement no longer silently reduces `RoomObjCount` when the first available positions are unsuitable.
+* All configured enemies must receive valid positions.
+* Regular enemy encounters now retain their complete configured count of up to eight enemies.
+* Normal non-Dojo Zelda rooms continue using the original direction-based spawn-position tables.
+
+### Fixed
+
+* Fixed combat encounters occasionally spawning only three, six, or another incomplete number of configured enemies.
+* Fixed the limited nine-cell system failing to find enough valid positions in restrictive arena geometries.
+* Fixed the possibility of two enemies receiving the same starting coordinate.
+* Fixed enemy placement becoming predictable after repeated room entries.
+* Fixed deleted references to Zelda’s original `SpawnPosListAddrsLo` and `SpawnPosListAddrsHi` tables.
+* Removed leftover code from the abandoned nine-cell traversal implementation.
+* Fixed undefined symbols caused by missing full-arena constants, tables, and runtime variables.
+
+### Technical
+
+* Added `DojoFullArenaSpawnCells`, containing 84 packed row-and-column candidates.
+* Added `DojoFullArenaSpawnSteps`, containing traversal increments that visit every candidate before repeating.
+* Added a randomized strict traversal pass.
+* Added a deterministic fallback traversal pass.
+* Added helper routines for:
+
+  * initializing randomized traversal;
+  * initializing fallback traversal;
+  * converting packed cells into object coordinates;
+  * checking position uniqueness;
+  * accepting a valid candidate;
+  * advancing through the pool;
+  * testing terrain safety;
+  * testing relaxed Link distance.
+* Preserved Zelda’s existing `IsSafeToSpawn` behavior during the strict placement pass.
+* Preserved collision validation during fallback placement.
+* Kept `RoomObjCount` unchanged throughout placement.
+* Added `DOJO_SPAWN_FAILURE` at `$06FA`:
+
+  * `$00` means every configured enemy was placed successfully.
+  * `$01` means the selected encounter could not be completely placed.
+* Verified `$06FA` remains `$00` with eight active enemies across all curated arenas.
+
+### Verified Arenas
+
+Eight-enemy randomized placement was tested successfully in:
+
+* Blank
+* 4 Short
+* 4 Tall
+* Maze
+* Grid
+* Chevy
+* NSU
+* Single 6
+
+### Current Test Encounter
+
+* Slot 1: Stalfos
+* Slot 2: Blue Keese
+* Slot 3: Stalfos
+* Slot 4: Blue Keese
+* Slot 5: Stalfos
+* Slot 6: Blue Keese
+* Slot 7: Stalfos
+* Slot 8: Blue Keese
+
+All eight enemies spawn in unique, randomized, arena-safe positions on every room entry.
+
+### Design Rules Confirmed
+
+* Regular combat mode supports up to eight enemies.
+* Regular enemies must use randomized safe starting positions.
+* Encounters must not become predictable through fixed placement.
+* Boss mode will be developed separately after the regular combat zone is complete.
+* Boss encounters will allow exactly one dungeon boss with no regular enemies.
+* Dodongo encounters may allow up to three Dodongos as a special exception.
+
+
 ## [0.0.20] - 20260712035228 - First Combat Drill
 
 Added
