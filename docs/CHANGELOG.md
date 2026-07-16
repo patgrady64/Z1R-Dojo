@@ -5,8 +5,114 @@ All notable changes to **Z1 Dojo** will be documented in this file.
 This project follows a milestone-based development process rather than feature dumps. Each version represents meaningful progress toward creating a complete training environment for *The Legend of Zelda* (NES) and Zelda 1 Randomizer players.
 
 --
+## [0.0.23] - 20260716143858 - Three-Pack Graphics Proof
+
+Z1 Dojo can now display regular enemies from all three original underworld enemy graphics packs in the same combat encounter.
+
+Added
+Added unified-graphics support for Like Likes.
+Added four relocated Like Like animation frames.
+Added special handling for Like Like’s noncontiguous right-side sprite pair.
+Added a fixed-bank sprite-tile helper for frames whose relocated left and right halves are no longer separated by two tile indexes.
+Added the first encounter containing enemies from all three original regular-enemy graphics families:
+Stalfos from the Level 1/2/7 graphics pack.
+Gibdo from the Level 3/5/8 graphics pack.
+Like Like from the Level 4/6/9 graphics pack.
+Technical Details
+
+Most Zelda enemy frames use two 8×16 sprite pairs and calculate the right side as:
+
+right tile = left tile + 2
+
+Gibdo’s relocated graphics preserve that relationship:
+
+$C6 + 2 = $C8
+
+Like Like’s first relocated animation frame does not preserve that relationship because its right-side pair was deduplicated with graphics from another pack:
+Relocated left tile: $EA
+Relocated right tile: $CA
+Added a sprite-tile helper that preserves Zelda’s normal left + 2 behavior while supporting exceptional frames such as Like Like’s $EA → $CA mapping.
+Patched Like Like’s four writable animation-heap entries during Z1 Dojo initialization.
+Reclaimed unused Bank 7 filler bytes to make room for the new helper.
+Replaced part of the original Bank 1 tile setup with a call to the fixed-bank helper without overflowing the RAM-code segment.
+Verified
+Stalfos display and animate correctly.
+Gibdos display and animate correctly.
+Like Likes display and animate correctly.
+Enemies from all three original graphics packs can appear simultaneously.
+Like Like’s complete animation cycle displays without corrupted halves.
+Like Likes can grab and paralyze Link normally.
+All eight configured enemies continue to spawn.
+Randomized spawn positions remain safe and unique.
+Room transitions continue to work.
+Enemies respawn correctly when the combat room is re-entered.
+Performance Notes
+
+Maximum-density encounters can produce authentic NES slowdown.
+
+The slowdown is most noticeable:
+
+while eight enemies are active;
+when Link fires a sword beam;
+when additional weapon-to-enemy collision checks are active.
+
+Performance improves as enemies are defeated and fewer objects require updating and collision processing.
+
+FCEUX’s lag counter also rises heavily during room transitions because Zelda intentionally skips controller polling while screen scrolling is active. Those transition counts do not necessarily indicate a Z1 Dojo performance defect.
+
+Foundation for Future Work
+
+This version proves that Z1 Dojo’s unified graphics system can support enemies from all three original regular-enemy graphics families in one room.
+
+Future versions will catalog and relocate the remaining regular enemies, including their animation frames, projectiles, child objects, palette requirements, and any additional noncontiguous sprite-pair exceptions.
+
 ## [0.0.22] - 20260716132052 - Dynamic Enemy Graphics Foundation
 
+Z1 Dojo can now load enemy graphics from multiple original dungeon graphics sets at the same time.
+
+### Added
+
+* Added a unified regular-enemy CHR bank for the combat zone.
+* Combined the regular-enemy graphics from the original Level 1/2/7, Level 3/5/8, and Level 4/6/9 graphics packs.
+* Added generated translation tables mapping original enemy tiles to their new unified CHR locations.
+* Added research reports documenting the unified graphics layout and mappings.
+* Added a runtime animation-tile patch for Gibdo.
+* Added the first successful mixed-graphics encounter using Stalfos and Gibdos.
+
+### Technical Details
+
+* The three original regular-enemy graphics packs contain 51 total 8×16 sprite-pair instances.
+* After removing two duplicate sprite pairs, the unified bank contains 49 unique sprite pairs.
+* The completed bank occupies exactly 98 8×8 CHR tiles.
+* The unified graphics data occupies `$0620` bytes.
+* The graphics are loaded into PPU tile range `$9E–$FF`.
+* The original regular-enemy and boss graphics transfer regions are combined into one continuous workspace during Z1 Dojo regular combat.
+* Enemy graphics are deduplicated as complete 32-byte 8×16 sprite pairs rather than individual 16-byte tiles, preserving the alignment required by Zelda’s sprite renderer.
+* Gibdo’s original animation tile `$A4` is relocated to unified tile `$C6`.
+* The existing renderer automatically derives Gibdo’s corresponding right-side tile from `$C6 + 2 = $C8`.
+
+### Fixed
+
+* Fixed Gibdos displaying as incorrect or corrupted sprites when used in a Level 1 graphics environment.
+* Fixed an initial unified-bank implementation that deduplicated individual 8×8 tiles and broke 8×16 sprite alignment.
+* Removed an oversized inline rendering hook that caused `BANK_01_CODE` to overflow.
+* Moved the Gibdo animation change to a compact writable-RAM patch during Z1 Dojo initialization.
+
+### Verified
+
+* The ROM starts normally.
+* The lobby displays normally.
+* Stalfos continue to render and animate correctly.
+* Gibdos now render and animate correctly.
+* Stalfos and Gibdos can appear together in the same encounter.
+* All eight configured enemies continue to spawn.
+* Randomized full-arena spawning still works.
+* Enemy spawn positions remain safe and unique.
+* Room transitions and respawning continue to work normally.
+
+### Foundation for Future Work
+
+This version proves that enemies from normally incompatible dungeon graphics packs can coexist in one Z1 Dojo combat room. Future versions will catalog and relocate the animation graphics for all supported regular enemies, projectiles, and related child objects.
 
 
 ## [0.0.21] - 20260714085724 - Full-Arena Spawn Pool
