@@ -1,0 +1,374 @@
+#!/usr/bin/env python3
+"""
+Build Z1 Dojo's unified regular-enemy CHR bank.
+
+Important:
+Zelda's enemy graphics must remain grouped as consecutive two-tile
+8x16 sprite pairs. Deduplicating individual 8x8 tiles breaks sprite
+alignment.
+
+Outputs:
+    bin/dat/PatternBlockUWSPDojo.dat
+    src/DojoRegularChrMap.inc
+    research/dojo-regular-chr-map.csv
+    research/dojo-regular-chr-map.md
+"""
+
+from __future__ import annotations
+
+import csv
+import hashlib
+from collections import OrderedDict
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+DATA_DIR = ROOT / "bin" / "dat"
+SRC_DIR = ROOT / "src"
+RESEARCH_DIR = ROOT / "research"
+
+TILE_BYTES = 16
+PAIR_BYTES = TILE_BYTES * 2
+
+SOURCE_PACK_BYTES = 0x0220
+SOURCE_TILE_COUNT = 34
+SOURCE_PAIR_COUNT = 17
+
+DOJO_BASE_TILE = 0x9E
+DOJO_TILE_CAPACITY = 98
+DOJO_PAIR_CAPACITY = DOJO_TILE_CAPACITY // 2
+DOJO_BYTE_CAPACITY = DOJO_TILE_CAPACITY * TILE_BYTES
+
+PACKS = OrderedDict(
+    [
+        ("127", "PatternBlockUWSP127.dat"),
+        ("358", "PatternBlockUWSP358.dat"),
+        ("469", "PatternBlockUWSP469.dat"),
+    ]
+)
+
+
+def load_packs() -> dict[str, list[bytes]]:
+    packs: dict[str, list[bytes]] = {}
+
+    for pack_name, filename in PACKS.items():
+        path = DATA_DIR / filename
+
+        if not path.exists():
+            raise FileNotFoundError(f"Missing CHR pack: {path}")
+
+        data = path.read_bytes()
+
+        if len(data) != SOURCE_PACK_BYTES:
+            raise ValueError(
+                f"{filename}: expected ${SOURCE_PACK_BYTES:04X} bytes, "
+                f"found ${len(data):04X}"
+            )
+
+        pairs = [
+            data[offset : offset + PAIR_BYTES]
+            for offset in range(0, len(data), PAIR_BYTES)
+        ]
+
+        if len(pairs) != SOURCE_PAIR_COUNT:
+            raise ValueError(
+                f"{filename}: expected {SOURCE_PAIR_COUNT} sprite pairs, "
+                f"found {len(pairs)}"
+            )
+
+        packs[pack_name] = pairs
+
+    return packs
+
+
+def short_hash(data: bytes) -> str:
+    return hashlib.sha1(data).hexdigest()[:12]
+
+
+def format_byte_rows(values: list[int], width: int = 8) -> list[str]:
+    rows: list[str] = []
+
+    for start in range(0, len(values), width):
+        row = values[start : start + width]
+        rows.append(
+            "    .BYTE " + ", ".join(f"${value:02X}" for value in row)
+        )
+
+    return rows
+
+
+def build_unified_pairs(
+    packs: dict[str, list[bytes]],
+) -> tuple[
+    list[bytes],
+    dict[str, list[int]],
+    dict[bytes, tuple[str, int]],
+]:
+    unique_pairs: list[bytes] = []
+    pair_to_index: dict[bytes, int] = {}
+    first_locations: dict[bytes, tuple[str, int]] = {}
+    mappings: dict[str, list[int]] = {}
+
+    for pack_name, pairs in packs.items():
+        tile_mapping: list[int] = []
+
+        for source_pair_index, pair in enumerate(pairs):
+            if pair not in pair_to_index:
+                unified_pair_index = len(unique_pairs)
+
+                if unified_pair_index >= DOJO_PAIR_CAPACITY:
+                    raise RuntimeError(
+                        "Unified enemy graphics exceed the "
+                        "49-pair workspace."
+                    )
+
+                pair_to_index[pair] = unified_pair_index
+                first_locations[pair] = (
+                    pack_name,
+                    source_pair_index,
+                )
+                unique_pairs.append(pair)
+
+            unified_pair_index = pair_to_index[pair]
+
+            unified_left_tile = (
+                DOJO_BASE_TILE + unified_pair_index * 2
+            )
+
+            # Preserve the complete two-tile pair.
+            tile_mapping.append(unified_left_tile)
+            tile_mapping.append(unified_left_tile + 1)
+
+        if len(tile_mapping) != SOURCE_TILE_COUNT:
+            raise RuntimeError(
+                f"Pack {pack_name}: expected {SOURCE_TILE_COUNT} "
+                f"mapped tiles, found {len(tile_mapping)}"
+            )
+
+        mappings[pack_name] = tile_mapping
+
+    return unique_pairs, mappings, first_locations
+
+
+def write_binary(unique_pairs: list[bytes]) -> Path:
+    output = DATA_DIR / "PatternBlockUWSPDojo.dat"
+
+    if len(unique_pairs) != DOJO_PAIR_CAPACITY:
+        raise RuntimeError(
+            f"Expected exactly {DOJO_PAIR_CAPACITY} unique pairs, "
+            f"found {len(unique_pairs)}"
+        )
+
+    data = b"".join(unique_pairs)
+
+    if len(data) != DOJO_BYTE_CAPACITY:
+        raise RuntimeError(
+            f"Expected ${DOJO_BYTE_CAPACITY:04X} bytes, "
+            f"found ${len(data):04X}"
+        )
+
+    output.write_bytes(data)
+    return output
+
+
+def write_include(mappings: dict[str, list[int]]) -> Path:
+    output = SRC_DIR / "DojoRegularChrMap.inc"
+
+    lines: list[str] = [
+        "; -----------------------------------------------------------------------------",
+        "; Z1 Dojo unified regular-enemy CHR translation tables",
+        "; -----------------------------------------------------------------------------",
+        ";",
+        "; Generated by tools/build_dojo_enemy_chr.py.",
+        "; Do not edit manually.",
+        ";",
+        "; Graphics are deduplicated as complete 32-byte sprite pairs.",
+        "; This preserves Zelda's consecutive two-tile alignment.",
+        ";",
+        "",
+        "DOJO_REGULAR_CHR_BASE_TILE   := $9E",
+        "DOJO_REGULAR_CHR_TILE_COUNT  := $62",
+        "DOJO_REGULAR_CHR_PAIR_COUNT  := $31",
+        "DOJO_REGULAR_CHR_BYTE_COUNT  := $0620",
+        "",
+        "DOJO_REGULAR_PACK_127 := $00",
+        "DOJO_REGULAR_PACK_358 := $01",
+        "DOJO_REGULAR_PACK_469 := $02",
+        "",
+    ]
+
+    for pack_name in PACKS:
+        lines.extend(
+            [
+                f"DojoRegularChrMap{pack_name}:",
+                *format_byte_rows(mappings[pack_name]),
+                "",
+            ]
+        )
+
+    lines.extend(
+        [
+            "DojoRegularChrMapAddrs:",
+            "    .ADDR DojoRegularChrMap127",
+            "    .ADDR DojoRegularChrMap358",
+            "    .ADDR DojoRegularChrMap469",
+            "",
+        ]
+    )
+
+    output.write_text("\n".join(lines), encoding="utf-8")
+    return output
+
+
+def write_csv(
+    packs: dict[str, list[bytes]],
+    mappings: dict[str, list[int]],
+    first_locations: dict[bytes, tuple[str, int]],
+) -> Path:
+    output = RESEARCH_DIR / "dojo-regular-chr-map.csv"
+
+    with output.open("w", newline="", encoding="utf-8") as csv_file:
+        writer = csv.writer(csv_file)
+
+        writer.writerow(
+            [
+                "source_pack",
+                "source_pair",
+                "source_tiles",
+                "original_ppu_tiles",
+                "unified_ppu_tiles",
+                "sha1_short",
+                "first_source_location",
+            ]
+        )
+
+        for pack_name, pairs in packs.items():
+            for pair_index, pair in enumerate(pairs):
+                source_tile_index = pair_index * 2
+
+                original_left = DOJO_BASE_TILE + source_tile_index
+                original_right = original_left + 1
+
+                unified_left = mappings[pack_name][source_tile_index]
+                unified_right = mappings[pack_name][source_tile_index + 1]
+
+                first_pack, first_pair = first_locations[pair]
+
+                writer.writerow(
+                    [
+                        pack_name,
+                        f"${pair_index:02X}",
+                        (
+                            f"${source_tile_index:02X}-"
+                            f"${source_tile_index + 1:02X}"
+                        ),
+                        (
+                            f"${original_left:02X}-"
+                            f"${original_right:02X}"
+                        ),
+                        (
+                            f"${unified_left:02X}-"
+                            f"${unified_right:02X}"
+                        ),
+                        short_hash(pair),
+                        f"{first_pack}:pair${first_pair:02X}",
+                    ]
+                )
+
+    return output
+
+
+def write_markdown(
+    unique_pairs: list[bytes],
+    mappings: dict[str, list[int]],
+) -> Path:
+    output = RESEARCH_DIR / "dojo-regular-chr-map.md"
+
+    total_pair_instances = len(PACKS) * SOURCE_PAIR_COUNT
+    duplicate_pair_instances = total_pair_instances - len(unique_pairs)
+
+    lines: list[str] = [
+        "# Z1 Dojo Unified Regular-Enemy CHR Bank",
+        "",
+        "Generated by `tools/build_dojo_enemy_chr.py`.",
+        "",
+        "## Summary",
+        "",
+        f"- Original sprite-pair instances: **{total_pair_instances}**",
+        f"- Unique 8x16 sprite pairs: **{len(unique_pairs)}**",
+        f"- Removed duplicate pairs: **{duplicate_pair_instances}**",
+        f"- Output 8x8 tiles: **{len(unique_pairs) * 2}**",
+        f"- Workspace capacity: **{DOJO_TILE_CAPACITY} tiles**",
+        f"- Remaining tile slots: **0**",
+        f"- Output size: **${DOJO_BYTE_CAPACITY:04X} "
+        f"({DOJO_BYTE_CAPACITY}) bytes**",
+        f"- PPU tile range: **${DOJO_BASE_TILE:02X}-$FF**",
+        "",
+        "## Pack Translation Tables",
+        "",
+    ]
+
+    for pack_name, mapping in mappings.items():
+        lines.extend(
+            [
+                f"### Pack `{pack_name}`",
+                "",
+                "| Source pair | Original tiles | Unified tiles |",
+                "|---:|---:|---:|",
+            ]
+        )
+
+        for pair_index in range(SOURCE_PAIR_COUNT):
+            source_index = pair_index * 2
+            original_left = DOJO_BASE_TILE + source_index
+
+            lines.append(
+                f"| `${pair_index:02X}` | "
+                f"`${original_left:02X}-${original_left + 1:02X}` | "
+                f"`${mapping[source_index]:02X}-"
+                f"${mapping[source_index + 1]:02X}` |"
+            )
+
+        lines.append("")
+
+    output.write_text("\n".join(lines), encoding="utf-8")
+    return output
+
+
+def main() -> None:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    SRC_DIR.mkdir(parents=True, exist_ok=True)
+    RESEARCH_DIR.mkdir(parents=True, exist_ok=True)
+
+    packs = load_packs()
+
+    unique_pairs, mappings, first_locations = build_unified_pairs(packs)
+
+    binary_path = write_binary(unique_pairs)
+    include_path = write_include(mappings)
+    csv_path = write_csv(
+        packs,
+        mappings,
+        first_locations,
+    )
+    markdown_path = write_markdown(
+        unique_pairs,
+        mappings,
+    )
+
+    print("Z1 Dojo paired regular-enemy CHR bank generated.")
+    print()
+    print(f"Original pair instances: {len(PACKS) * SOURCE_PAIR_COUNT}")
+    print(f"Unique sprite pairs:     {len(unique_pairs)}")
+    print(f"Output tiles:            {len(unique_pairs) * 2}")
+    print(f"Workspace capacity:      {DOJO_TILE_CAPACITY}")
+    print(f"Remaining tile slots:    0")
+    print()
+    print(f"Binary:  {binary_path.relative_to(ROOT)}")
+    print(f"Include: {include_path.relative_to(ROOT)}")
+    print(f"CSV:     {csv_path.relative_to(ROOT)}")
+    print(f"Report:  {markdown_path.relative_to(ROOT)}")
+
+
+if __name__ == "__main__":
+    main()

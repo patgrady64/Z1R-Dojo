@@ -5,7 +5,11 @@ All notable changes to **Z1 Dojo** will be documented in this file.
 This project follows a milestone-based development process rather than feature dumps. Each version represents meaningful progress toward creating a complete training environment for *The Legend of Zelda* (NES) and Zelda 1 Randomizer players.
 
 --
-## [0.0.21] - 20260714085724 - Dynamic Enemy Graphics Foundation
+## [0.0.22] - 20260716132052 - Dynamic Enemy Graphics Foundation
+
+
+
+## [0.0.21] - 20260714085724 - Full-Arena Spawn Pool
 
 ### Added
 
