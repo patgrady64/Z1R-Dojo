@@ -1,0 +1,107 @@
+object_type,display_name,update_routine,category,status,generic_animation_index,animation_heap_offset,first_frame_tile,heap_window_upper_bound,confirmed_original_pack,confirmed_unified_first_tile,pack_127_first_tile_candidate,pack_358_first_tile_candidate,pack_469_first_tile_candidate,full_frame_count,original_frame_tiles,unified_frame_tiles,projectile_or_child_dependencies,palette_requirements,special_draw_behavior,verified_in_game,notes
+$00,Do Nothing variant 1,DoNothing,boss/helper/special,outside current scope,$01,$08,$5C,1,,,,,,,,,,,,,empty/none
+$01,Lynel variant 1,UpdateLynel,overworld,outside current scope,$02,$0B,$CE,4,,,,,,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$02,Lynel variant 2,UpdateLynel,overworld,outside current scope,$03,$0F,$CE,4,,,,,,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$03,Moblin variant 1,UpdateMoblin,overworld,outside current scope,$04,$13,$F0,4,,,,,,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$04,Moblin variant 2,UpdateMoblin,overworld,outside current scope,$05,$17,$F0,4,,,,,,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$05,Goriya variant 1,UpdateGoriya,underworld specialized,proven,$06,$5C,$B8,4,127,$B8,$B8,$DA,$F8,4,"$B8,$BC,$B0,$B4","$B8,$BC,$B0,$B4",monster boomerang; graphics and return behavior verified,variant palettes confirmed: red and blue,normal left+2 renderer,yes,"All directions and animation frames verified. Boomerang throw, return, and catch behavior confirmed."
+$06,Goriya variant 2,UpdateGoriya,underworld specialized,proven,$07,$60,$B8,4,127,$B8,$B8,$DA,$F8,4,"$B8,$BC,$B0,$B4","$B8,$BC,$B0,$B4",monster boomerang; graphics and return behavior verified,variant palettes confirmed: red and blue,normal left+2 renderer,yes,"All directions and animation frames verified. Boomerang throw, return, and catch behavior confirmed."
+$07,Octorock variant 1,UpdateOctorock,overworld,outside current scope,$08,$1B,$B4,6,,,$B4,$D6,$F4,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$08,Octorock variant 2,UpdateOctorock,overworld,outside current scope,$09,$1B,$B4,6,,,$B4,$D6,$F4,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$09,Octorock variant 3,UpdateOctorock,overworld,outside current scope,$0A,$21,$B4,6,,,$B4,$D6,$F4,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$0A,Octorock variant 4,UpdateOctorock,overworld,outside current scope,$0B,$21,$B4,6,,,$B4,$D6,$F4,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$0B,Darknut variant 1,UpdateDarknut,underworld specialized,proven,$0C,$64,$B8,6,358,$DA,$B8,$DA,$F8,6,"$B8,$AC,$B4,$BC,$B0,$B4","$DA,$CE,$D6,$DE,$D2,$D6",none,variant palettes confirmed: red and blue,normal left+2 renderer; frontal shield blocking,yes,All directions and walking frames verified. Frontal attacks blocked; side and rear damage confirmed.
+$0C,Darknut variant 2,UpdateDarknut,underworld specialized,proven,$0D,$6A,$B8,6,358,$DA,$B8,$DA,$F8,6,"$B8,$AC,$B4,$BC,$B0,$B4","$DA,$CE,$D6,$DE,$D2,$D6",none,variant palettes confirmed: red and blue,normal left+2 renderer; frontal shield blocking,yes,All directions and walking frames verified. Frontal attacks blocked; side and rear damage confirmed.
+$0D,Tektite Or Boulder variant 1,UpdateTektiteOrBoulder,overworld,outside current scope,$0E,$27,$CA,2,,,,,,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$0E,Tektite Or Boulder variant 2,UpdateTektiteOrBoulder,overworld,outside current scope,$0F,$29,$CA,2,,,,,,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$0F,Blue Leever,UpdateBlueLeever,overworld,outside current scope,$10,$2B,$BC,10,,,$BC,$DE,$FC,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$10,Red Leever,UpdateRedLeever,overworld,outside current scope,$11,$35,$BC,10,,,$BC,$DE,$FC,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$11,Zora,UpdateZora,overworld,outside current scope,$12,$3F,$BC,10,,,$BC,$DE,$FC,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$12,Vire,UpdateVire,underworld specialized,proven,$13,$70,$AC,4,469,$EC,$AC,$CE,$EC,4,"$AC,$AE,$B0,$B2","$EC,$EE,$F0,$F2",splits into two Red Keese; Red Keese use common underworld CHR,,normal left+2 renderer,yes,All four Vire frames verified. Wooden Sword split and resulting Red Keese graphics and behavior confirmed.
+$13,Zol,UpdateZol,underworld specialized,proven,$14,$74,$A8,2,358,$CA,$A8,$CA,$CA,2,"$A8,$AA","$CA,$CC",splits into Gel; Gel uses common underworld CHR,,normal left+2 renderer,yes,Wooden Sword split verified. White Sword kills outright. Both Zol and Gel graphics confirmed.
+$14,Gel variant 1,UpdateGel,underworld common,already compatible,$15,$76,$92,2,,,,,,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$15,Gel variant 2,UpdateGel,underworld common,already compatible,$16,$76,$92,2,,,,,,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$16,Pols Voice,UpdatePolsVoice,underworld specialized,proven,$17,$78,$A0,2,358,$C2,$A0,$C2,$E4,2,"$A0,$A2","$C2,$C4",none,,normal left+2 renderer,yes,Both hopping frames and orientations verified. Bow and arrow combat verified.
+$17,Like Like,UpdateLikeLike,underworld specialized,proven,$18,$7A,$A6,4,469,$EA,$A6,$C8,$EA,,,,,,,yes,Graphics pack and unified rendering verified in-game.
+$18,Digdogger variant 1,UpdateDigdogger,boss/helper/special,outside current scope,$19,$7E,$D8,2,,,,,,,,,,,,,Digdogger boss form
+$19,Do Nothing variant 2,DoNothing,boss/helper/special,outside current scope,$1A,$80,$00,2,,,,,,,,,,,,,unused/do-nothing
+$1A,Peahat,UpdatePeahat,overworld,outside current scope,$1B,$49,$C6,2,,,,,,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$1B,Keese variant 1,UpdateKeese,underworld common,already compatible,$1C,$82,$9A,2,,,,,,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$1C,Keese variant 2,UpdateKeese,underworld common,already compatible,$1D,$84,$9A,2,,,,,,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$1D,Keese variant 3,UpdateKeese,underworld common,already compatible,$1E,$86,$9A,2,,,,,,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$1E,Armos,UpdateArmos,overworld,outside current scope,$1F,$4B,$A0,4,,,$A0,$C2,$E4,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$1F,Boulder Set,UpdateBoulderSet,boss/helper/special,outside current scope,$20,$4F,$90,2,,,,,,,,,,,,,boulder-set controller
+$20,Tektite Or Boulder variant 3,UpdateTektiteOrBoulder,boss/helper/special,outside current scope,$21,$4F,$90,2,,,,,,,,,,,,,boulder/environment object
+$21,Ghini,UpdateGhini,overworld,outside current scope,$22,$51,$E4,2,,,,,,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$22,Flying Ghini,UpdateFlyingGhini,overworld,outside current scope,$23,$51,$E4,2,,,,,,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$23,Blue Wizzrobe,UpdateBlueWizzrobe,underworld specialized,proven,$24,$88,$B4,4,469 + Boss3468,$F4,$B4,$D6,$F4,4,"$B4,$B8,$BC,$BE","$F4,$F8,$FC,$FE",magic shot; verify separate projectile graphics and behavior,variant palettes confirmed: blue and red,final frame uses noncontiguous right side $FE->$9E,yes,Body graphics verified. Final frame uses Boss3468 $C0/$C1 pair relocated to unified $9E/$9F.
+$24,Red Wizzrobe,UpdateRedWizzrobe,underworld specialized,proven,$25,$8C,$B4,4,469 + Boss3468,$F4,$B4,$D6,$F4,4,"$B4,$B8,$BC,$BE","$F4,$F8,$FC,$FE",magic shot; verify separate projectile graphics and behavior,variant palettes confirmed: blue and red,final frame uses noncontiguous right side $FE->$9E,yes,Body graphics verified. Final frame uses Boss3468 $C0/$C1 pair relocated to unified $9E/$9F.
+$25,Patra Child variant 1,UpdatePatraChild,boss/helper/special,outside current scope,$26,$90,$FC,2,,,,,,,,,,,,,Patra child
+$26,Patra Child variant 2,UpdatePatraChild,boss/helper/special,outside current scope,$27,$90,$FC,2,,,,,,,,,,,,,Patra child
+$27,Wallmaster,UpdateWallmaster,underworld specialized,proven,$28,$92,$AC,2,127,$AC,$AC,$CE,$EC,2,$AC,$AC,none,,"Wallmaster emergence, movement, capture, and room-return behavior",yes,Graphics and animation verified. Capturing Link correctly returns him to the dungeon entrance.
+$28,Rope,UpdateRope,underworld specialized,proven,$29,$94,$A0,2,127,$A0,$A0,$C2,$E4,2,$A0,$A0,none,,normal left+2 renderer,yes,Horizontal and vertical orientations verified.
+$29,Do Nothing variant 3,DoNothing,boss/helper/special,outside current scope,$2A,$96,$A0,2,,,$A0,$C2,$E4,,,,,,,,unused/do-nothing
+$2A,Stalfos,UpdateStalfos,underworld specialized,proven,$2B,$98,$A8,1,127,$A8,$A8,$CA,$CA,,,,,,,yes,Graphics pack and unified rendering verified in-game.
+$2B,Bubble variant 1,UpdateBubble,underworld common,already compatible,$2C,$99,$8E,1,,,,,,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$2C,Bubble variant 2,UpdateBubble,underworld common,already compatible,$2D,$99,$8E,1,,,,,,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$2D,Bubble variant 3,UpdateBubble,underworld common,already compatible,$2E,$99,$8E,1,,,,,,,,,,,,,"Confirm original pack, full frame set, palette, and dependencies."
+$2E,Whirlwind,UpdateWhirlwind,boss/helper/special,outside current scope,$2F,$53,$94,1,,,,,,,,,,,,,whirlwind
+$2F,Pond Fairy,UpdatePondFairy,boss/helper/special,outside current scope,$30,$54,$F3,1,,,,,,,,,,,,,pond fairy
+$30,Gibdo,UpdateGibdo,underworld specialized,proven,$31,$9A,$A4,1,358,$C6,$A4,$C6,$E8,,,,,,,yes,Graphics pack and unified rendering verified in-game.
+$31,Dodongo variant 1,UpdateDodongo,boss/helper/special,outside current scope,$32,$9B,$DC,10,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$32,Dodongo variant 2,UpdateDodongo,boss/helper/special,outside current scope,$33,$9B,$DC,10,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$33,Gohma variant 1,UpdateGohma,boss/helper/special,outside current scope,$34,$A5,$F4,6,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$34,Gohma variant 2,UpdateGohma,boss/helper/special,outside current scope,$35,$A5,$F4,6,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$35,Rupee Stash,UpdateRupeeStash,boss/helper/special,outside current scope,$36,$AB,$B0,1,,,$B0,$D2,$F0,,,,,,,,Retained for dispatch-table completeness.
+$36,Grumble,UpdateGrumble,boss/helper/special,outside current scope,$37,$AB,$B0,1,,,$B0,$D2,$F0,,,,,,,,Retained for dispatch-table completeness.
+$37,Zelda,UpdateZelda,boss/helper/special,outside current scope,$38,$AC,$F6,2,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$38,Digdogger variant 2,UpdateDigdogger,boss/helper/special,outside current scope,$39,$AE,$D4,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$39,Digdogger variant 3,UpdateDigdogger,boss/helper/special,outside current scope,$3A,$AE,$D4,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$3A,Lamnola variant 1,UpdateLamnola,boss/helper/special,outside current scope,$3B,$AF,$FC,3,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$3B,Lamnola variant 2,UpdateLamnola,boss/helper/special,outside current scope,$3C,$AF,$FC,3,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$3C,Manhandla,UpdateManhandla,boss/helper/special,outside current scope,$3D,$B2,$E8,6,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$3D,Aquamentus,UpdateAquamentus,boss/helper/special,outside current scope,$3E,$B8,$D0,14,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$3E,Ganon,UpdateGanon,boss/helper/special,outside current scope,$3F,$B8,$D0,14,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$3F,Guard Fire,UpdateGuardFire,boss/helper/special,outside current scope,$40,$08,$5C,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$40,Standing Fire,UpdateStandingFire,boss/helper/special,outside current scope,$41,$08,$5C,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$41,Moldorm,UpdateMoldorm,boss/helper/special,outside current scope,$42,$C6,$DE,2,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$42,Gleeok variant 1,UpdateGleeok,boss/helper/special,outside current scope,$43,$C6,$DE,2,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$43,Gleeok variant 2,UpdateGleeok,boss/helper/special,outside current scope,$44,$C6,$DE,2,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$44,Gleeok variant 3,UpdateGleeok,boss/helper/special,outside current scope,$45,$C6,$DE,2,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$45,Gleeok variant 4,UpdateGleeok,boss/helper/special,outside current scope,$46,$C6,$DE,2,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$46,Gleeok Head,UpdateGleeokHead,boss/helper/special,outside current scope,$47,$C6,$DE,2,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$47,Patra variant 1,UpdatePatra,boss/helper/special,outside current scope,$48,$C8,$F8,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$48,Patra variant 2,UpdatePatra,boss/helper/special,outside current scope,$49,$C8,$F8,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$49,Trap variant 1,UpdateTrap,boss/helper/special,outside current scope,$4A,$C9,$96,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$4A,Trap variant 2,UpdateTrap,boss/helper/special,outside current scope,$4B,$C9,$96,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$4B,Underworld Person variant 1,UpdateUnderworldPerson,boss/helper/special,outside current scope,$4C,$CA,$98,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$4C,Underworld Person variant 2,UpdateUnderworldPerson,boss/helper/special,outside current scope,$4D,$CA,$98,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$4D,Underworld Person variant 3,UpdateUnderworldPerson,boss/helper/special,outside current scope,$4E,$CA,$98,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$4E,Underworld Person variant 4,UpdateUnderworldPerson,boss/helper/special,outside current scope,$4F,$CA,$98,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$4F,Underworld Person variant 5,UpdateUnderworldPerson,boss/helper/special,outside current scope,$50,$CA,$98,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$50,Underworld Person variant 6,UpdateUnderworldPerson,boss/helper/special,outside current scope,$51,$CA,$98,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$51,Underworld Person Life Or Money,UpdateUnderworldPersonLifeOrMoney,boss/helper/special,outside current scope,$52,$CA,$98,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$52,Underworld Person variant 7,UpdateUnderworldPerson,boss/helper/special,outside current scope,$53,$CA,$98,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$53,Monster Shot variant 1,UpdateMonsterShot,boss/helper/special,outside current scope,$54,$09,$9E,1,,,$9E,$C0,$E2,,,,,,,,Retained for dispatch-table completeness.
+$54,Monster Shot variant 2,UpdateMonsterShot,boss/helper/special,outside current scope,$55,$09,$9E,1,,,$9E,$C0,$E2,,,,,,,,Retained for dispatch-table completeness.
+$55,Fireball variant 1,UpdateFireball,boss/helper/special,outside current scope,$56,$0A,$44,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$56,Fireball variant 2,UpdateFireball,boss/helper/special,outside current scope,$57,$0A,$44,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$57,Monster Shot variant 3,UpdateMonsterShot,boss/helper/special,outside current scope,$58,$0B,$CE,4,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$58,Monster Shot variant 4,UpdateMonsterShot,boss/helper/special,outside current scope,$59,$0B,$CE,4,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$59,Monster Shot variant 5,UpdateMonsterShot,boss/helper/special,outside current scope,$5A,$0B,$CE,4,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$5A,Monster Shot variant 6,UpdateMonsterShot,boss/helper/special,outside current scope,$5B,$0B,$CE,4,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$5B,Monster Arrow,UpdateMonsterArrow,boss/helper/special,outside current scope,$5C,$0B,$CE,4,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$5C,Arrow Or Boomerang,UpdateArrowOrBoomerang,boss/helper/special,outside current scope,$5D,$0B,$CE,4,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$5D,Dead Dummy,UpdateDeadDummy,boss/helper/special,outside current scope,$5E,$CB,$B1,1,,,$B1,$D3,$F1,,,,,,,,Retained for dispatch-table completeness.
+$5E,Flute Secret,UpdateFluteSecret,boss/helper/special,outside current scope,$5F,$55,$C9,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$5F,Do Nothing variant 4,DoNothing,boss/helper/special,outside current scope,$60,$55,$C9,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$60,Item,UpdateItem,boss/helper/special,outside current scope,$61,$55,$C9,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$61,Dock,UpdateDock,boss/helper/special,outside current scope,$62,$55,$C9,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$62,Rock Or Gravestone variant 1,UpdateRockOrGravestone,boss/helper/special,outside current scope,$63,$55,$C9,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$63,Rock Wall variant 1,UpdateRockWall,boss/helper/special,outside current scope,$64,$55,$C9,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$64,Tree,UpdateTree,boss/helper/special,outside current scope,$65,$55,$C9,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$65,Rock Or Gravestone variant 2,UpdateRockOrGravestone,boss/helper/special,outside current scope,$66,$56,$BD,1,,,$BD,$DF,$FD,,,,,,,,Retained for dispatch-table completeness.
+$66,Rock Or Gravestone variant 3,UpdateRockOrGravestone,boss/helper/special,outside current scope,$67,$57,$C1,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$67,Rock Wall variant 2,UpdateRockWall,boss/helper/special,outside current scope,$68,$57,$C1,1,,,,,,,,,,,,,Retained for dispatch-table completeness.
+$68,Block,UpdateBlock,boss/helper/special,outside current scope,$69,$CB,$B1,1,,,$B1,$D3,$F1,,,,,,,,Retained for dispatch-table completeness.
+$69,Do Nothing variant 5,DoNothing,boss/helper/special,outside current scope,$6A,$CC,,,,,,,,,,,,,,,Retained for dispatch-table completeness. Animation heap offset is outside ObjAnimFrameHeap.

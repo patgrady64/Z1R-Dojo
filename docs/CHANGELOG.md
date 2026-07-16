@@ -5,6 +5,211 @@ All notable changes to **Z1 Dojo** will be documented in this file.
 This project follows a milestone-based development process rather than feature dumps. Each version represents meaningful progress toward creating a complete training environment for *The Legend of Zelda* (NES) and Zelda 1 Randomizer players.
 
 --
+## [0.0.24] - 20260716152418 - Regular Enemy Graphics Catalog
+
+Z1 Dojo now supports the complete set of regular underworld enemy graphics across the original game’s three incompatible dungeon graphics families.
+
+This version catalogs, relocates, and verifies the graphics dependencies needed for regular dungeon enemies to coexist in the same configurable combat room.
+
+Added
+Added an automated regular-enemy graphics catalog generator.
+Added CSV and Markdown research catalogs containing:
+object type;
+update routine;
+animation index;
+animation-heap offset;
+original frame tiles;
+original graphics family;
+unified frame tiles;
+child-enemy dependencies;
+projectile dependencies;
+palette requirements;
+special rendering behavior;
+in-game verification status.
+Separated catalog entries into:
+underworld specialized enemies;
+underworld common enemies;
+overworld enemies;
+bosses and helper objects.
+Added unified animation patches for all regular dungeon enemies that require relocation.
+Added constants for the newly verified regular enemy types.
+Added a missing Wizzrobe sprite pair from the Level 3/4/6/8 boss graphics block.
+Added special right-side mappings for noncontiguous unified sprite frames.
+Unified Graphics Families
+
+Z1 Dojo now combines regular-enemy artwork from all three original dungeon graphics packs:
+
+Level 1/2/7 regular-enemy graphics
+Level 3/5/8 regular-enemy graphics
+Level 4/6/9 regular-enemy graphics
+
+The unified graphics bank continues to occupy:
+
+$0620 bytes
+98 total 8×8 CHR tiles
+PPU tile range $9E–$FF
+
+Graphics remain deduplicated as complete 32-byte 8×16 sprite pairs so Zelda’s sprite alignment is preserved.
+
+Common Underworld Graphics
+
+The following enemy families already use the always-loaded common underworld graphics block and require no specialized relocation:
+
+Gel
+Keese
+Bubble
+
+These remain compatible with every unified specialized graphics combination.
+
+Verified Pack 127 Enemies
+
+The following enemies retain their original tile locations and require no animation relocation:
+
+Goriya
+Object types $05 and $06
+Frames: $B8,$BC,$B0,$B4
+Red and blue palettes verified
+All movement directions verified
+Monster boomerang graphics verified
+Boomerang throw, return, and catch behavior verified
+Rope
+Object type $28
+Original and unified first tile: $A0
+Horizontal and vertical orientations verified
+Charge behavior verified
+Stalfos
+Object type $2A
+Original and unified first tile: $A8
+Previously proven in mixed-graphics encounters
+Wallmaster
+Object type $27
+Original and unified first tile: $AC
+Emergence and movement verified
+Link capture behavior verified
+Dungeon-entrance return behavior verified
+Verified Pack 358 Enemies
+Darknut
+Object types $0B and $0C
+Original frames:
+$B8,$AC,$B4,$BC,$B0,$B4
+Unified frames:
+$DA,$CE,$D6,$DE,$D2,$D6
+Red and blue palettes verified
+All directional animations verified
+Frontal shield blocking verified
+Side and rear damage verified
+Gibdo
+Object type $30
+Original frame tile: $A4
+Unified frame tile: $C6
+Right side automatically resolves to $C8
+Previously proven in mixed-graphics encounters
+Pols Voice
+Object type $16
+Original frames:
+$A0,$A2
+Unified frames:
+$C2,$C4
+Hopping animation verified
+Horizontal and vertical appearances verified
+Bow-and-arrow combat verified
+Zol
+Object type $13
+Original frames:
+$A8,$AA
+Unified frames:
+$CA,$CC
+Wooden Sword split behavior verified
+Resulting Gel graphics and behavior verified
+White Sword killing without splitting confirmed as normal behavior
+Verified Pack 469 Enemies
+Like Like
+Object type $17
+Uses four relocated animation entries
+Includes a noncontiguous right-side frame mapping:
+left tile $EA
+right tile $CA
+Complete animation cycle verified
+Link capture and paralysis behavior verified
+Vire
+Object type $12
+Original frames:
+$AC,$AE,$B0,$B2
+Unified frames:
+$EC,$EE,$F0,$F2
+Ordinary and upward-facing animation frames verified
+Wooden Sword split behavior verified
+Resulting Red Keese graphics and behavior verified
+Wizzrobe
+Object types $23 and $24
+Original frames:
+$B4,$B8,$BC,$BE
+Unified frames:
+$F4,$F8,$FC,$FE
+Red and blue Wizzrobe body graphics verified
+Variant palettes verified
+Requires one additional sprite pair originally located at boss-region tiles $C0/$C1
+The canonical Level 3/4/6/8 version of that pair is relocated to unified tiles $9E/$9F
+Final frame uses the special noncontiguous mapping:
+left tile $FE
+right tile $9E
+Special Rendering Support
+
+The unified sprite helper now handles frames whose relocated right side cannot be calculated through Zelda’s normal left tile + 2 rule.
+
+Verified exceptions include:
+
+Like Like:
+$EA → $CA
+Wizzrobe:
+$FE → $9E
+
+All other cataloged enemy frames retain the normal left + 2 relationship.
+
+Loadout Testing Support
+
+Temporary test loadout options were expanded during graphics verification to support:
+
+Wooden Sword testing
+White Sword testing
+Bow ownership
+Arrow ownership
+Arrow selection as the starting B item
+Maximum starting rupees
+
+These settings enabled verification of Zol, Vire, Pols Voice, Darknut, and Wizzrobe combat behavior.
+
+Verified
+Every regular underworld enemy graphics family has been assigned to its correct original graphics pack.
+Every required specialized animation sequence has been mapped into the unified CHR bank.
+Enemies from all three original graphics families can coexist.
+Red and blue enemy palette variants remain distinct.
+Directional and multi-frame animations remain intact.
+Child-enemy transformations remain functional.
+Goriya boomerangs remain functional.
+Like Like and Wallmaster capture behavior remains functional.
+Darknut shield behavior remains functional.
+Eight-enemy randomized encounters continue to spawn safely.
+Enemy positions remain unique.
+Room re-entry restores the configured encounter.
+Lobby and combat-room transitions remain functional.
+Performance Notes
+
+Maximum-density encounters can produce authentic NES slowdown, especially when:
+
+eight active enemies are updating;
+Link fires a sword beam;
+multiple weapon-to-enemy collision checks are active;
+enemies generate additional projectiles or child objects.
+
+FCEUX’s lag counter also rises substantially during room scrolling because Zelda intentionally skips controller polling during those transition frames. Those transition counts do not necessarily represent a Z1 Dojo performance defect.
+
+Foundation for Future Work
+
+The research stage for regular dungeon enemy graphics is complete.
+
+Future versions can use this catalog to build the player-facing enemy-selection menu, allowing any supported combination of up to eight regular dungeon enemies while automatically applying the required graphics, animation, palette, projectile, and child-enemy dependencies.
+
 ## [0.0.23] - 20260716143858 - Three-Pack Graphics Proof
 
 Z1 Dojo can now display regular enemies from all three original underworld enemy graphics packs in the same combat encounter.
